@@ -13,15 +13,27 @@ class FaceView: UIView {
     
     //Public API
     
-    var scale: CGFloat = 0.9
+    var scale: CGFloat = 0.9 { didSet{ setNeedsDisplay() } }
     
-    let mouthCurvature: Double = 0
+    var mouthCurvature: Double = 0 { didSet{ setNeedsDisplay() } }
     
-    var eyeBrowTilt: Double = 0
+    var eyeBrowTilt: Double = 0 { didSet{ setNeedsDisplay() } }
     
-    var color: UIColor = UIColor.blueColor()
+    var eyesOpen: Bool = true { didSet{ setNeedsDisplay() } }
     
-    var lineWidth: CGFloat = 5.0
+    var color: UIColor = UIColor.blueColor() { didSet{ setNeedsDisplay() } }
+    
+    var lineWidth: CGFloat = 5.0 { didSet{ setNeedsDisplay() } }
+    
+    func changeScale(recognizer: UIPinchGestureRecognizer) {
+        switch recognizer.state {
+        case .Changed, .Ended:
+            scale *= recognizer.scale
+            recognizer.scale = 1
+        default:
+            break
+        }
+    }
     
     
     //Private implementation
@@ -64,7 +76,15 @@ class FaceView: UIView {
     private func pathForEye(eye: Eye) -> UIBezierPath {
         let eyeRadius = skullRadius / Ratios.SkullRadiusToEyeRadius
         let eyeCenter = getEyeCenter(eye)
-        return pathForCircleCenteredAtPoint(eyeCenter, withRadius: eyeRadius)
+        if eyesOpen {
+            return pathForCircleCenteredAtPoint(eyeCenter, withRadius: eyeRadius)
+        } else {
+            let path = UIBezierPath()
+            path.moveToPoint(CGPoint(x: eyeCenter.x - eyeRadius, y: eyeCenter.y))
+            path.addLineToPoint(CGPoint(x: eyeCenter.x + eyeRadius, y: eyeCenter.y))
+            path.lineWidth = lineWidth
+            return path
+        }
     }
     
     private func pathForCircleCenteredAtPoint(midPoint: CGPoint, withRadius radius: CGFloat) -> UIBezierPath {
@@ -103,7 +123,7 @@ class FaceView: UIView {
         var browCenter = getEyeCenter(eye)
         browCenter.y -= skullRadius / Ratios.SkullRadiusToBrowOffset
         let eyeRadius = skullRadius / Ratios.SkullRadiusToEyeRadius
-        let browTiltOffset = CGFloat( max(-1, min(tilt, 1)) ) * eyeRadius / 2
+        let browTiltOffset = CGFloat( max(-0.5, min(tilt, 0.5)) ) * eyeRadius / 2
         let startPoint = CGPoint(x: browCenter.x - eyeRadius, y: browCenter.y - browTiltOffset)
         let endPoint = CGPoint(x: browCenter.x + eyeRadius, y: browCenter.y + browTiltOffset)
         let path = UIBezierPath()
