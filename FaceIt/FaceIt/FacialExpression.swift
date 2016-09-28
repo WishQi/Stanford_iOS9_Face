@@ -19,14 +19,14 @@ struct FacialExpression {
     enum EyeBrows: Int {
         case Relaxed
         case Normal
-        case Furrowd
+        case Furrowed
         
         func moreRelaxedBrow() -> EyeBrows {
             return EyeBrows(rawValue: rawValue - 1) ?? .Relaxed
         }
         
         func moreFurrowedBrow() -> EyeBrows {
-            return EyeBrows(rawValue: rawValue + 1) ?? .Furrowd
+            return EyeBrows(rawValue: rawValue + 1) ?? .Furrowed
         }
     }
     
