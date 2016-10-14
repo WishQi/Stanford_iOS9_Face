@@ -21,19 +21,19 @@ class FaceViewController: UIViewController {
     
     @IBOutlet weak var faceView: FaceView! {
         didSet {
-            faceView.addGestureRecognizer(UIPinchGestureRecognizer(target: faceView, action: #selector( faceView.changeScale(_:) ) ))
+            faceView.addGestureRecognizer(UIPinchGestureRecognizer(target: faceView, action: #selector( faceView.changeScale ) ))
             
             let happierSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector( increaseHappiness))
-            happierSwipeGestureRecognizer.direction = .Up
+            happierSwipeGestureRecognizer.direction = .up
             faceView.addGestureRecognizer(happierSwipeGestureRecognizer)
             
             let sadderSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(decreaseHappiness))
-            sadderSwipeGestureRecognizer.direction = .Down
+            sadderSwipeGestureRecognizer.direction = .down
             faceView.addGestureRecognizer(sadderSwipeGestureRecognizer)
             
-            faceView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleEyes(_:)) ))
+            faceView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleEyes) ))
             
-            faceView.addGestureRecognizer(UIRotationGestureRecognizer( target: self, action: #selector(changeBrows(_:)) ))
+            faceView.addGestureRecognizer(UIRotationGestureRecognizer( target: self, action: #selector(changeBrows) ))
             
             updateUI()
         }
@@ -64,7 +64,7 @@ class FaceViewController: UIViewController {
     }
     
     func toggleEyes(recognizer: UITapGestureRecognizer) {
-        if recognizer.state == .Ended {
+        if recognizer.state == .ended {
             switch expression.eyes {
             case .Open: expression.eyes = .Closed
             case .Closed: expression.eyes = .Open
@@ -75,7 +75,7 @@ class FaceViewController: UIViewController {
     
     func changeBrows(recognizer: UIRotationGestureRecognizer) {
         switch recognizer.state {
-        case .Changed, .Ended:
+        case .changed, .ended:
             if recognizer.rotation > CGFloat(M_PI / 4) {
                 expression.eyeBrows = expression.eyeBrows.moreRelaxedBrow()
                 recognizer.rotation = 0
