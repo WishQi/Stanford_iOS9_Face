@@ -31,7 +31,7 @@ class FaceViewController: UIViewController {
             sadderSwipeGestureRecognizer.direction = .down
             faceView.addGestureRecognizer(sadderSwipeGestureRecognizer)
             
-            faceView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleEyes) ))
+            faceView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(shakeHead(recognizer:))))
             
             faceView.addGestureRecognizer(UIRotationGestureRecognizer( target: self, action: #selector(changeBrows) ))
             
@@ -71,6 +71,31 @@ class FaceViewController: UIViewController {
             case .Squinting: break
             }
         }
+    }
+    
+    private struct Animation {
+        static let ShakeAngel = CGFloat(M_PI/6)
+        static let ShakeDuration = 0.5
+    }
+    func shakeHead(recognizer: UITapGestureRecognizer) {
+        UIView.animate(
+            withDuration: Animation.ShakeDuration,
+            animations: { [weak weakSelf = self] in weakSelf?.faceView.transform = (weakSelf?.faceView.transform.rotated(by: Animation.ShakeAngel))! },
+            completion: { (finished) in
+                if finished {
+                    UIView.animate(
+                        withDuration: Animation.ShakeDuration,
+                        animations: { [weak weakSelf = self] in weakSelf?.faceView.transform = (weakSelf?.faceView.transform.rotated(by: -Animation.ShakeAngel*2))! },
+                        completion: { (finished) in
+                            if finished {
+                                UIView.animate(
+                                    withDuration: Animation.ShakeDuration,
+                                    animations: { [weak weakSelf = self] in weakSelf?.faceView.transform = (weakSelf?.faceView.transform.rotated(by: Animation.ShakeAngel))! },
+                                    completion: nil)
+                            }
+                        })
+                }
+            })
     }
     
     func changeBrows(recognizer: UIRotationGestureRecognizer) {

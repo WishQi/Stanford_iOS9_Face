@@ -23,7 +23,7 @@ class FaceView: UIView {
     
     var color: UIColor = UIColor.blue { didSet{ setNeedsDisplay(); leftEye.color = color; rightEye.color = color } }
     
-    var lineWidth: CGFloat = 5.0 { didSet{ setNeedsDisplay(); leftEye.lineWidth = lineWidth; rightEye.lineWidth = lineWidth } }
+    var lineWidth: CGFloat = 3.0 { didSet{ setNeedsDisplay(); leftEye.lineWidth = lineWidth; rightEye.lineWidth = lineWidth } }
     
     func changeScale(recognizer: UIPinchGestureRecognizer) {
         switch recognizer.state {
