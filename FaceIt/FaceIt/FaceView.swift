@@ -13,7 +13,7 @@ class FaceView: UIView {
     
     //Public API
     
-    var scale: CGFloat = 0.9 { didSet{ setNeedsDisplay() } }
+    var scale: CGFloat = 0.9 { didSet{ setNeedsDisplay(); setNeedsLayout(); } }
     
     var mouthCurvature: Double = 0 { didSet{ setNeedsDisplay() } }
     
@@ -161,8 +161,6 @@ class FaceView: UIView {
     override func draw(_ rect: CGRect) {
         color.setStroke()
         pathForCircleCenteredAtPoint(skullCenter, withRadius: skullRadius).stroke()
-//        pathForEye(.Left).stroke()
-//        pathForEye(.Right).stroke()
         pathForMouth().stroke()
         pathForBrow(.Left).stroke()
         pathForBrow(.Right).stroke()

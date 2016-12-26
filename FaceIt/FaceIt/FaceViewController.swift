@@ -21,9 +21,9 @@ class FaceViewController: UIViewController {
     
     @IBOutlet weak var faceView: FaceView! {
         didSet {
-            faceView.addGestureRecognizer(UIPinchGestureRecognizer(target: faceView, action: #selector( faceView.changeScale ) ))
+            faceView.addGestureRecognizer(UIPinchGestureRecognizer(target: faceView, action: #selector(faceView.changeScale(recognizer:))))
             
-            let happierSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector( increaseHappiness))
+            let happierSwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(increaseHappiness))
             happierSwipeGestureRecognizer.direction = .up
             faceView.addGestureRecognizer(happierSwipeGestureRecognizer)
             
@@ -63,15 +63,15 @@ class FaceViewController: UIViewController {
         expression.mouth = expression.mouth.sadderMouth()
     }
     
-    func toggleEyes(recognizer: UITapGestureRecognizer) {
-        if recognizer.state == .ended {
-            switch expression.eyes {
-            case .Open: expression.eyes = .Closed
-            case .Closed: expression.eyes = .Open
-            case .Squinting: break
-            }
-        }
-    }
+//    func toggleEyes(recognizer: UITapGestureRecognizer) {
+//        if recognizer.state == .ended {
+//            switch expression.eyes {
+//            case .Open: expression.eyes = .Closed
+//            case .Closed: expression.eyes = .Open
+//            case .Squinting: break
+//            }
+//        }
+//    }
     
     private struct Animation {
         static let ShakeAngel = CGFloat(M_PI/6)
@@ -83,19 +83,17 @@ class FaceViewController: UIViewController {
             animations: { [weak weakSelf = self] in weakSelf?.faceView.transform = (weakSelf?.faceView.transform.rotated(by: Animation.ShakeAngel))! },
             completion: { (finished) in
                 if finished {
-                    UIView.animate(
-                        withDuration: Animation.ShakeDuration,
-                        animations: { [weak weakSelf = self] in weakSelf?.faceView.transform = (weakSelf?.faceView.transform.rotated(by: -Animation.ShakeAngel*2))! },
-                        completion: { (finished) in
-                            if finished {
-                                UIView.animate(
-                                    withDuration: Animation.ShakeDuration,
-                                    animations: { [weak weakSelf = self] in weakSelf?.faceView.transform = (weakSelf?.faceView.transform.rotated(by: Animation.ShakeAngel))! },
-                                    completion: nil)
-                            }
-                        })
-                }
-            })
+                    UIView.animate(withDuration: Animation.ShakeDuration,
+                                   animations: { [weak weakSelf = self] in
+                                                weakSelf?.faceView.transform = (weakSelf?.faceView.transform.rotated(by: -Animation.ShakeAngel * 2))! },
+                                   completion: { (finished) in
+                                                if finished {
+                                                    UIView.animate(withDuration: Animation.ShakeDuration,
+                                                                   animations: { [weak weakSelf = self] in
+                                                                                weakSelf?.faceView.transform = (weakSelf?.faceView.transform.rotated(by: Animation.ShakeAngel))! },
+                                                                   completion: nil)
+                                                }})
+                }})
     }
     
     func changeBrows(recognizer: UIRotationGestureRecognizer) {
