@@ -98,20 +98,6 @@ class FaceView: UIView {
         positionEye(eye: rightEye, center: getEyeCenter(.Right))
     }
     
-//    private func pathForEye(_ eye: Eye) -> UIBezierPath {
-//        let eyeRadius = skullRadius / Ratios.SkullRadiusToEyeRadius
-//        let eyeCenter = getEyeCenter(eye)
-//        if eyesOpen {
-//            return pathForCircleCenteredAtPoint(eyeCenter, withRadius: eyeRadius)
-//        } else {
-//            let path = UIBezierPath()
-//            path.move(to: CGPoint(x: eyeCenter.x - eyeRadius, y: eyeCenter.y))
-//            path.addLine(to: CGPoint(x: eyeCenter.x + eyeRadius, y: eyeCenter.y))
-//            path.lineWidth = lineWidth
-//            return path
-//        }
-//    }
-    
     private func pathForCircleCenteredAtPoint(_ midPoint: CGPoint, withRadius radius: CGFloat) -> UIBezierPath {
         let path = UIBezierPath(arcCenter: midPoint, radius: radius, startAngle: 0.0, endAngle: CGFloat(2 * M_PI), clockwise: true)
         path.lineWidth = lineWidth
